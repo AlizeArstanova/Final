@@ -1,0 +1,306 @@
+---
+title: "International migration's effects on labour market"
+author: 
+  - Arstanova Alize[^1]
+bibliography: ../bibliography/biblio.bib
+csl: ../csl/apa.csl
+header-includes:
+  - \usepackage{polyglossia}
+  - \setmainlanguage{english}
+  - \usepackage{booktabs}
+  - \usepackage{caption} 
+  - \captionsetup[table]{skip=10pt}
+output:
+  bookdown::pdf_document2:
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 8
+    keep_tex: no
+    latex_engine: xelatex
+    number_sections: yes
+    toc: no
+geometry: margin=1in
+link-citations: yes
+urlcolor: blue
+fontsize: 12pt
+biblio-style: apalike
+abstract: |
+    For the last 30 years, migration processes have increased due to a variety of reasons. The most frequent and obvious ones, though, are for greater employment opportunities and financial security. Despite certain economic benefits of welcoming immigrants, the majority of the argument over immigration policy centers on the idea that immigrants may reduce job possibilities for local employees and may impede the economic advancement of particular communities within receiving regions.
+    
+    The main objective of the research is to determine the relationships between unemployment (a dependent variable) and GDP and migration (independent variables) and document the findings. The variables are denoted by the real GDP rate, net migration values, and unemployment rate, while the observations are states from various parts of the world. The data sets are obtained from official internet sources, such as the International Labor Organization, United Nations Children’s Fund data and the World Bank.
+    
+    The data sets are subjected to several types of testing. The observations' population means are being investigated in pairs using the pairwise comparison technique to see if they are significantly distinct from one another. The Shapiro-Wilk test was applied to identify whether the data are normally distributed. Multiple regression was implemented for the primary analysis to establish a relationship between one dependent variable and a number of independent variables. 
+    
+    We have not revealed any clear correlations between unemployment and migration through the analysis of line graphs. Multiple regression analysis has demonstrated that a country's growing immigrant population does not result in more domestically unemployed people. Besides, the results also show that an actual increase in GDP has a slight negative effect on unemployment. According to the findings, it is recommended for governments to give greater consideration to domestic economic factors such as GDP when adopting a law regarding international migration.
+    
+    We have to carefully examine the scope of the research while deciding on a sample size. We believe that Pearson correlation testing has been rendered unfeasible due to the limited sample size. For this study, a larger sample size is required to obtain more precise results.
+    
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = FALSE, echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+<!-- ======================================================================= -->
+<!-- ============================== FOOTNOTES ============================== -->
+<!-- ======================================================================= -->
+[^1]: 21080629, [Github Repo](https://github.com/AlizeArstanova/Final.git) 
+
+# Introduction
+An estimated 281 million people, approximately 3.6% of the world’s population, currently live outside their country of origin. An increasing number of persons leave their homes for a complex combination of reasons; however, the most common and obvious one is for the labor markets. A majority of immigrants come from developing states due to government incompetence, economic instability and limited opportunities to earn money. Therefore, migration is one of the ways to escape poverty and improve the financial status of households. 
+
+Nowadays, academic researchers study the economic gains of this phenomenon, such as a rise in productivity and contribution to taxes. Migrants increase potential output both in their original countries by sending remittances and in host countries by enlarging the size of the labor force and creating demand. At the same time, much of the policy debate surrounding immigration deals with the possibility that immigrants “take jobs away” from native workers and perhaps hamper the economic progress of some groups in the receiving states [@borjas1989economic]. In the early 2000s, Canada and Australia, whose economies were greatly influenced and shaped by international migration, held discussions regarding immigration and unemployment because the public and some policy-makers believed that foreign workers were responsible for low employment.
+
+However, there is no generally accepted opinion on the direction and degree of impact of international migration on unemployment. In the literature, there are studies that have concluded that migration has a positive effect on unemployment, as well as studies that have found a negative relationship between them [@kilic2019relationship]. 
+
+Accordingly, this work seeks to define whether there is a correlation between international migration and unemployment or not. The results are expected to show no correlation or a negative correlation because plenty of studies have stated that immigration positively affects productivity (high productivity means high employment). Another aim of this paper is to find the relationship between variables with the help of regression analysis. The findings are predicted to indicate that migration has little to no effect on the unemployment rate.
+ 
+
+**Data**
+
+The observations are represented by countries from different continents, and the variables are represented by the real GDP rate, net migration values and unemployment rate. The period is 1991-2021, and the data sources used in this paper are taken from International Labor Organization, United Nations Children’s Fund data and the World Bank. 
+
+
+
+## Literature Review
+The literature regarding the effects of international migration follows various strands. Some of them attempt to describe the migrations’ initiation and consequences through theoretical models without any factual evidence. Other studies are heavily based on empirical information within a theoretical framework. 
+
+Firstly, we reviewed all the theories concerning the topic to obtain a general idea of what might be affected by migration and what outcomes it might lead to. @massey1993theories investigated a fragmented set of theories that had developed largely in isolation from one another. As a result, proposed models employ different concepts, various assumptions and frames of reference to explain why international migration begins and continues. For instance, neoclassical economics conceives of movement as an individual decision for income maximization, while dual labor market theory generally ignores micro-level processes, focusing instead on forces operating at much higher levels of aggregation.
+
+Nevertheless, we need empirical data and statistical analysis to establish a clear link between emigration and presumed issues such as unemployment or benefits, namely GDP growth. 
+
+One of the most popular studies about the impact of international migration on labor markets in Canada was conducted by @islam2007immigration. He covered the period of 1961-2002, and his results were as follows: the causality tests indicated no relationship between migration and unemployment, and the cointegration test showed that there was no increase in total unemployment due to migration. @kilic2019relationship examined the effects of immigration on unemployment in 23 OECD countries selected between 2000 and 2015 by using the panel data analysis method. According to the findings, migration was observed to have a negative effect. @gundougmucs2021effect used panel regression analysis and concluded that international migration had no statistically significant effect on unemployment in 27 European states between 2000-2017. Moreover, increases in GDP, public expenditures, education expenditures and wage rises result in employment growth.In addition, among several theoretical models that try to explain why international migration begins, two of them - "Dual labor market" and "Cumulative causation" - claim that immigration does not lead to higher unemployment. In contrast, @edo2015impact used micro-level data to reveal the influence of international migration on the French labor market and claimed that it had negative effects on employment. 
+
+Two studies by @taylor1996international discussed direct and indirect ways by which migration is able to increase productivity in both sending and receiving countries. @simionescu2016gdp analyzed the relationship between the GDP and the net migration using the comparative approach represented by the panel data and Bayesian analysis for the period 1991-2013 in Central and Eastern European states. A negative correlation was recorded between net migration and the real GDP. 
+
+
+
+# Data set
+```{r import-data-join, echo=FALSE, warning=FALSE, message=FALSE}
+# Make your all library calls here. Once you call a library here
+# you don't need to call them again in the chunks below.
+library(tidyverse)
+library(here)
+
+# hrbrthemes doesn't behave well with pdf output.
+# Don't use it
+# library(hrbrthemes)
+
+
+unemployment <- read_csv(here("data/unemployment.csv")) %>%
+  rename("Country" = "Reference area") %>% 
+  select(-Source, -"Female_15-24", -"Female_25+", -"Male_15-24", -"Male_25+", -"Total_15-24",-"Total_25+") %>% 
+  janitor::clean_names() %>% 
+  rename("female_unemployment_rate" = "female_15",
+         "male_unemplyment_rate" = "male_15",
+         "total_unemployment_rate" = "total_15")
+
+gdp <- read_csv(here("data/GDP and GNI.csv")) %>% 
+  janitor::clean_names() %>% 
+  rename_with(~stringr::str_remove_all(.x, pattern = "x[0-9]+_")) %>% 
+  pivot_longer(starts_with("yr"),
+               names_to = "year",
+               values_to = "value") %>% 
+  drop_na(series_code) %>% 
+  select(-series_code, -country_code) %>% 
+  pivot_wider(names_from = series_name,
+              values_from = value) %>% 
+  mutate(year = as.numeric(stringr::str_remove_all(year, "yr"))) %>% 
+  set_names(c("country", "year", "gdp_growth", "gni_growth", "gni_pc", "gdp_pc")) %>% 
+  mutate(across(gdp_growth:gdp_pc, as.numeric)) %>% 
+  rename("gdp_growth_rate" = "gdp_growth",
+         "gdp_per_capita" = "gdp_pc",
+         "gni_growth_rate" = "gni_growth",
+         "gni_per_capita" = "gni_pc")
+
+
+migration <- read_csv(here("data/international migration.csv")) %>% 
+  janitor::clean_names() %>% 
+  select(ref_area_geographic_area, time_period_time_period, obs_value_observation_value) %>% 
+  set_names(c("country", "year", "migration")) %>% 
+  separate_wider_delim(country, delim = ": ", names = c("drop_me", "country")) %>% 
+  select(-drop_me) %>% 
+  rename("migration_rate" = "migration")
+
+ 
+data_set <- inner_join(gdp, unemployment) %>%
+  inner_join(migration)
+
+data_set <- data_set[-c(145, 146, 147, 148,280),]
+```
+
+This study endeavors to find the relationship between migration and unemployment in 17 selected countries that have different levels of income and are from various continents. The analysis covers the period of 1991-2021 and uses annual data. Figures belonging to the study are obtained from three different sources. International migration data is taken from United Nations Children’s Fund data, the unemployment rate from the International Labor Organization, and economic growth from the World Bank database. 
+
+The net migration rate is expressed as the difference between the number of immigrants and the number of emigrants (people leaving an area) divided by the population in a given year. The unemployment rate shows the share of workers in the labor force who do not currently have a job but are actively looking for work in a particular year. Economic growth is represented by nominal GDP, which measures the monetary value (USD) of final goods and services produced in a country in a given period of time, and by the annual GDP growth rate, which compares the year-over-year change in a country's economic output. 
+
+```{r summary, results='asis'}
+data_set %>% 
+  select(-country) %>% 
+  summarytools::descr(stats = c("mean", "sd", "min", "med", "max"), transpose = TRUE) %>% 
+  xtable::xtable(caption = "Summary Statistics",
+         label = "tab:summary",
+         align = c("l", "c", "c", "c", "c", "c")) %>% 
+  print(booktabs = TRUE, comment = FALSE, caption.placement = "top") 
+```
+
+The model was estimated with 522 observations. Table \@ref(tab:summary) shows descriptive statistics for variables.  According to the summary statistics, while the average total unemployment rate was 6.76, the lowest and highest unemployment rates were 0.60 (Belarus, 1991) and 27.50 (Greece, 2013) in the sample, respectively. The average migration rate variable was 0.79. This series indicated the highest migration rate at 13.19 and the lowest one at -15.61. The GDP per capita variable had an average of USD 12914.99 in the period discussed. In addition, the highest GDP growth rate was 15.33 and the lowest one was -13.13, with an average rate of 3.64.
+
+# Data Analysis
+```{r rate, fig.align='center', fig.cap='Migration and unemployment rate'}
+data_set %>%
+  filter(country %in% c("Argentina", "Australia", "Belarus", "Uganda", "Canada", "Japan")) %>% 
+  ggplot() +
+  aes(year) +
+  geom_line(aes(y = migration_rate, color = "Migration Rate")) +
+  geom_line(aes(y = total_unemployment_rate, color = "Unemployment Rate")) +
+  labs(x = "Year",
+       y = "Rate",
+       title = "Migration and unemployment rate",
+       color = "") +
+  facet_wrap(vars(country)) +
+  theme_minimal() + # use ggplot's minimal theme
+  theme(legend.position = "bottom") 
+```
+```{r gdp, fig.align='center', fig.cap='Migration and GDP growth rate'}
+data_set %>%
+  filter(country %in% c("Argentina", "Australia", "Belarus", "Uganda", "Canada", "Japan")) %>% 
+  ggplot() +
+  aes(year) +
+  geom_line(aes(y = migration_rate, color = "Migration Rate")) +
+  geom_line(aes(y = gdp_growth_rate, color = "GDP Growth Rate")) +
+  labs(x = "Year",
+       y = "Rate",
+       title = "Migration and GDP growth rate",
+       color = "") +
+  facet_wrap(vars(country)) +
+  theme_minimal() + # use ggplot's minimal theme
+  theme(legend.position = "bottom") 
+```
+Figure \@ref(fig:rate) displays migration and unemployment rates in 6 countries around the world over the period of 1991-2021. From Figure \@ref(fig:rate) we can observe that Australia and Canada have experienced overall declining unemployment with some fluctuations since the 1990s. The unemployment rate in another high-income country, Japan, and low-income Uganda fluctuated between 2% and 6% for a given period. Upper middle-income states had a relatively high unemployment rate in the mid-1990s, but it fell years later. As mentioned before, Canada's and Australia's economies were shaped by international migration, and, as evidence, we can see a slight increase over time in migration with some expansion and contraction levels for both countries. Belarus and Argentina had low migration values, close to zero, which is expected for developing nations because people prefer to move to wealthier ones. Japan had low value as well, but it was mostly related to limited cultural assimilation and the integration of foreigners into society, not to economic issues. Uganda, which is considered to be a least developed state, had a negative migration rate for most of the period, which is explainable as people left for better job opportunities. So far, looking at the graphics, we can not establish any relationship between net migration value and unemployment rate.     
+
+It is beneficial to determine whether there is a correlation between migration and GDP. A positive correlation between them would be a useful element to support the first question in case we get a negative correlation between migration and unemployment and vice versa. Because, for example, if increasing immigration boosts production levels, then expanded production improves employment. However, according to Figure \@ref(fig:gdp), not every state's high immigration rate leads to the labour market's enlargement. Figure \@ref(fig:gdp) illustrates that positive migration values had almost no impact on the Argentinian, Belarusian and Japanese  economies. To this list, we can also add Uganda, which showed positive patterns between net migration and GDP growth only in 1998-2003 and 2014-2021. In contrast, Canada and Australia indicated generally positive relationships between immigration and GDP, except for 2008-2009, when there was a huge economic crisis.
+
+## Methodology
+First of all, we compared the means of migration with the help of Pairwise testing in 6 countries chosen for the data analysis section. Secondly, this study endeavored to analyze the relationship between migration and unemployment in 17 states through the Pearson correlation coefficient (r). It is the most common way of measuring a linear correlation. It is a number between –1 and 1 that measures the strength and direction of the relationship between two variables. However, in order to use it, we needed to check if the covariation was linear and if the data from each of the two variables (x,y) followed a normal distribution. Last but not least, we tried to define the relationship between two or more variables using regression analysis, which is suitable for non-normal distributions. 
+
+## Findings
+
+### Pairwise Test
+Pairwise comparison is a method for analyzing multiple population means in pairs to determine whether they are significantly different from one another. Table \@ref(tab:means) displays the results of pairwise testing. We got a p-value greater than or equal to 0.05 only in 2 cases, other comparisons indicated statistical significance. Not to mention, we obtained extremely significant value in 9 cases out of 15. When a result is identified as being statistically significant, this means that you are confident that there is a real difference or relationship between two variables, and it’s unlikely that it’s a one-off occurrence.
+
+```{r means, eval=TRUE, results='asis'}
+library(knitr)
+library(rstatix)
+library(kableExtra)
+library(devtools)
+options(knitr.table.format = "html")
+data_set %>% 
+  filter(country %in% c("Argentina", "Australia", "Belarus", "Uganda", "Canada", "Japan")) %>% 
+  pairwise_t_test(migration_rate ~ country, 
+                  pool.sd = FALSE,
+                  p.adjust.method = "bonferroni") %>% 
+  kbl(caption = "Pairwise test") %>%
+  kable_styling(bootstrap_options = "striped", font_size = 10)
+```
+
+### Shapiro-Wilk test
+Next, we created a scatter plot to show a positive nonlinear relationship between migration and unemployment rate measured for the same individuals (Figure \@ref(fig:unemployment)). Then we ran the Shapiro-Wilk test for normality. The null hypothesis was that "data are normally distributed". Our p-value was less than 2.2e-16, meaning less than 0.05, so we rejected our null hypothesis. We repeated the same steps for migration and GDP and obtained a negative linear relationship between them (Figure \@ref(fig:gdp2)), along with a p-value less than 2.2e-16. Since our data had not been normally distributed, we were not able to use the Pearson correlation test.
+
+```{r unemployment, echo = FALSE, fig.show = 'asis', fig.cap='A positive linear relationship'}
+library("ggpubr")
+ggscatter(data_set,
+          x = "migration_rate",
+          y = "total_unemployment_rate",
+          color = "steelblue",
+          add = "reg.line",
+          add.params = list(color = "blue"),
+          conf.int = FALSE,
+          cor.coef = TRUE,
+          cor.coef.coord = c(5,25),
+          cor.method = "pearson",
+          ggtheme = theme_minimal()) 
+```
+```{r, echo = FALSE, results = 'hide'}
+shapiro.test(data_set$total_unemployment_rate)
+shapiro.test(data_set$migration_rate)
+```
+
+```{r gdp2, echo = FALSE, fig.show = 'asis', fig.cap='A negative linear relationship' }
+library("ggpubr")
+ggscatter(data_set,
+          x = "migration_rate",
+          y = "gdp_growth_rate",
+          color = "steelblue",
+          add = "reg.line",
+          add.params = list(color = "blue"),
+          conf.int = FALSE,
+          cor.coef = TRUE,
+          cor.coef.coord = c(5,25),
+          cor.method = "pearson",
+          ggtheme = theme_minimal())
+
+```
+```{r, echo = FALSE, results='hide'}
+shapiro.test(data_set$gdp_growth_rate) 
+shapiro.test(data_set$migration_rate)
+```
+
+### Multiple regression
+Regression analysis can be used for both linear and nonlinear relationships in spite of normality of data distribution. Multiple regression is a regression model that estimates the relationship between one or more independent variables and one dependent variable. The regression uses the ordinary least-squares (OLS) algorithm to fit the model:
+$$
+y_i = \beta_0 + \beta_1x_i + \beta_2x_i + \varepsilon_i
+$$
+where $\beta_0$, $\beta_1$ and $\beta_2$ are the regression coefficients and $\varepsilon_i$ are the error terms. Thus, we get an equation:
+$$
+Unemployment_i = \beta_0 + \beta_1\varDelta\ Migration_i + \beta_2\varDelta\ GDP + \varepsilon_i
+$$
+Where i denotes countries and unemployment is a dependent variable indicating the total unemployment rate. Migration and GDP are independent variables indicating the international migration to the countries and the growth rate, respectively. 
+
+```{r graphic,  echo = FALSE, fig.show = 'asis', fig.cap='linear regression'}
+data_set %>% 
+  ggplot(aes(migration_rate + gdp_growth_rate, total_unemployment_rate)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal() 
+```
+```{r, results='hide'}
+score_mod <- lm(total_unemployment_rate ~ migration_rate + gdp_growth_rate, data = data_set)
+summary(score_mod)
+```
+```{r regression, eval=TRUE, results='asis'}
+library(knitr)
+library(rstatix)
+library(kableExtra)
+library(devtools)
+options(knitr.table.format = "html")
+tidy(score_mod) %>% 
+  kbl(caption = "Simple linear regression") %>%
+  kable_styling(bootstrap_options = "striped", font_size = 14)
+```
+
+Figure \@ref(fig:graphic) illustrates linear regression analysis, and Table \@ref(tab:regression) shows the results of the Ordinary Least Squares Regression. Our null and alternative hypotheses for $\beta_0$, $\beta_1$ and $\beta_2$ are:
+$$
+H_0: \beta_0 = 0 \quad
+H_A: \beta_0 \neq 0
+$$
+$$ 
+H_0: \beta_1\varDelta\ Migration_i = 0 \quad
+H_A: \beta_1\varDelta\ Migration_i \neq 0
+$$
+$$
+H_0: \beta_2\varDelta\ GDP = 0 \quad
+H_A: \beta_2\varDelta\ GDP \neq 0
+$$
+Based on the p-value, we reject the null hypothesis, and estimate that the coefficient of intercept is statistically different from zero and significant. According to the results, economic growth has a slight impact on unemployment. Our dependent variable in the regression is the unemployment rate, so if GDP increases one unit, it will decrease the unemployment rate by 0.29 units. If real growth is 0, the unemployment rate equals 7.82. This result can be supported by Okun's law. It implies an inverse relationship between unemployment and GDP. Arthur Okun claimed that if GDP grows rapidly, the unemployment rate declines; if growth is very low or negative, the unemployment rate rises; and if growth equals potential, the unemployment rate remains unchanged. The effect of the migration rate on unemployment rates is not statistically significant because the p-value equals 0.22, which is greater than 0.05.
+
+# Conclusion
+This study analyzed empirically the relationship between international migration and unemployment in 17 countries around the world between 1991 and 2021. For this study, multiple regression analysis was employed. Migration and GDP are taken as independent variables, and unemployment is a dependent variable. The regression analysis indicates that migration does not have a statistically significant impact on the unemployment rate. In other words, increasing numbers of immigrants in a country do not cause higher unemployment among local population. Furthermore, real economic growth has a minor effect on unemployment, according to the results. 
+
+The estimations are consistent with the Divided Labour Market Thoery and comparable with the results of @gundougmucs2021effect discussed in the literature review section. Dual Labour Market Theory states that international labor migration is largely demand-based. Employers from immigrant-receiving countries attempt to attract workers for unskilled positions at the bottom of an occupational hierarchy, thus leaving secure, skilled jobs to locals. Due to migrants' employment in the secondary sector, native workers mostly enter the capital-intensive sector, where salaries are higher and jobs are more stable. Hence, it is challenging to assess to what extent migration affects labour market and, especially, unemployment. This theory also claims that the real economic growth rate has a favorable effect on employment, and GDP needs to be given more consideration. These two statements have been supported by the study's findings. 
+
+Lastly, when choosing a sample size, we need to take into account the scale of the research. In this study, we considered global unemployment, so we made an effort to select 17 nations from different continents and with various levels of income. However, this work can be improved by a larger sample size on a worldwide scale.
+
+
+\newpage
+# References {#references}
+<div id="refs"></div>
+
